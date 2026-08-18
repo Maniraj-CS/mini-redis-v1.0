@@ -1,0 +1,4 @@
+/home/manirajpandit/Desktop/mini-redis/build/CMakeFiles/mini_redis.dir
+/home/manirajpandit/Desktop/mini-redis/build/CMakeFiles/lru_benchmark.dir
+/home/manirajpandit/Desktop/mini-redis/build/CMakeFiles/edit_cache.dir
+/home/manirajpandit/Desktop/mini-redis/build/CMakeFiles/rebuild_cache.dir
