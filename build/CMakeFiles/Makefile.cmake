@@ -58,4 +58,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/mini_redis.dir/DependInfo.cmake"
   "CMakeFiles/lru_benchmark.dir/DependInfo.cmake"
+  "CMakeFiles/cache_stress_test.dir/DependInfo.cmake"
   )

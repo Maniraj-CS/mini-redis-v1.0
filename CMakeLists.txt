@@ -29,3 +29,15 @@ target_include_directories(lru_benchmark PRIVATE
 target_link_libraries(lru_benchmark
     benchmark::benchmark
 )
+
+# for stress  testing
+
+add_executable(cache_stress_test
+    tests/CacheStressTest.cpp
+    src/KeyValueStore.cpp
+    src/LRUCache.cpp
+)
+
+target_include_directories(cache_stress_test PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)

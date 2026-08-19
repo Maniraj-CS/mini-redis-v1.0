@@ -142,6 +142,19 @@ lru_benchmark/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lru_benchmark.dir/build.make CMakeFiles/lru_benchmark.dir/build
 .PHONY : lru_benchmark/fast
 
+#=============================================================================
+# Target rules for targets named cache_stress_test
+
+# Build rule for target.
+cache_stress_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cache_stress_test
+.PHONY : cache_stress_test
+
+# fast build rule for target.
+cache_stress_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/build
+.PHONY : cache_stress_test/fast
+
 benchmarks/LRUCacheBenchmark.o: benchmarks/LRUCacheBenchmark.cpp.o
 .PHONY : benchmarks/LRUCacheBenchmark.o
 
@@ -172,6 +185,7 @@ src/KeyValueStore.o: src/KeyValueStore.cpp.o
 # target to build an object file
 src/KeyValueStore.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/KeyValueStore.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/KeyValueStore.cpp.o
 .PHONY : src/KeyValueStore.cpp.o
 
 src/KeyValueStore.i: src/KeyValueStore.cpp.i
@@ -180,6 +194,7 @@ src/KeyValueStore.i: src/KeyValueStore.cpp.i
 # target to preprocess a source file
 src/KeyValueStore.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/KeyValueStore.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/KeyValueStore.cpp.i
 .PHONY : src/KeyValueStore.cpp.i
 
 src/KeyValueStore.s: src/KeyValueStore.cpp.s
@@ -188,6 +203,7 @@ src/KeyValueStore.s: src/KeyValueStore.cpp.s
 # target to generate assembly for a file
 src/KeyValueStore.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/KeyValueStore.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/KeyValueStore.cpp.s
 .PHONY : src/KeyValueStore.cpp.s
 
 src/LRUCache.o: src/LRUCache.cpp.o
@@ -197,6 +213,7 @@ src/LRUCache.o: src/LRUCache.cpp.o
 src/LRUCache.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/LRUCache.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lru_benchmark.dir/build.make CMakeFiles/lru_benchmark.dir/src/LRUCache.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/LRUCache.cpp.o
 .PHONY : src/LRUCache.cpp.o
 
 src/LRUCache.i: src/LRUCache.cpp.i
@@ -206,6 +223,7 @@ src/LRUCache.i: src/LRUCache.cpp.i
 src/LRUCache.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/LRUCache.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lru_benchmark.dir/build.make CMakeFiles/lru_benchmark.dir/src/LRUCache.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/LRUCache.cpp.i
 .PHONY : src/LRUCache.cpp.i
 
 src/LRUCache.s: src/LRUCache.cpp.s
@@ -215,6 +233,7 @@ src/LRUCache.s: src/LRUCache.cpp.s
 src/LRUCache.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/LRUCache.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lru_benchmark.dir/build.make CMakeFiles/lru_benchmark.dir/src/LRUCache.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/src/LRUCache.cpp.s
 .PHONY : src/LRUCache.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -241,6 +260,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_redis.dir/build.make CMakeFiles/mini_redis.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+tests/CacheStressTest.o: tests/CacheStressTest.cpp.o
+.PHONY : tests/CacheStressTest.o
+
+# target to build an object file
+tests/CacheStressTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/tests/CacheStressTest.cpp.o
+.PHONY : tests/CacheStressTest.cpp.o
+
+tests/CacheStressTest.i: tests/CacheStressTest.cpp.i
+.PHONY : tests/CacheStressTest.i
+
+# target to preprocess a source file
+tests/CacheStressTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/tests/CacheStressTest.cpp.i
+.PHONY : tests/CacheStressTest.cpp.i
+
+tests/CacheStressTest.s: tests/CacheStressTest.cpp.s
+.PHONY : tests/CacheStressTest.s
+
+# target to generate assembly for a file
+tests/CacheStressTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_stress_test.dir/build.make CMakeFiles/cache_stress_test.dir/tests/CacheStressTest.cpp.s
+.PHONY : tests/CacheStressTest.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -249,6 +292,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... cache_stress_test"
 	@echo "... lru_benchmark"
 	@echo "... mini_redis"
 	@echo "... benchmarks/LRUCacheBenchmark.o"
@@ -263,6 +307,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... tests/CacheStressTest.o"
+	@echo "... tests/CacheStressTest.i"
+	@echo "... tests/CacheStressTest.s"
 .PHONY : help
 
 
