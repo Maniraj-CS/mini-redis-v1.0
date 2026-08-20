@@ -159,7 +159,7 @@ Phase 2 — Persistence (pending)
  TTL recovery
  Recovery/error handling
 ```
-Phase 3 — Pub/Sub
+Phase 3 — Pub/Sub (pending)
 ---
 ```
  Channels
