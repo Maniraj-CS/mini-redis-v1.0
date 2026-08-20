@@ -22,28 +22,29 @@ Application / Backend
    Actual Storage
 
 
+```
+## Current Features
 
-Current Features
 
-
-Key-value storage
-LRU Cache
-Configurable cache capacity
-TTL / key expiration
-SET
-GET
-DEL
-EXISTS
-CLEAR
-LRU eviction
-Thread-safe cache operations
-Concurrent stress testing
-ThreadSanitizer testing
-Google Benchmark setup
+- Key-value storage
+- LRU Cache
+- Configurable cache capacity
+- TTL / key expiration
+- SET
+- GET
+- DEL
+- EXISTS
+- CLEAR
+- LRU eviction
+- Thread-safe cache operations
+- Concurrent stress testing
+- ThreadSanitizer testing
+- Google Benchmark setup
 
 
 Project Structure
-
+---
+```bash
 mini-redis/
 ├── benchmarks/
 ├── docs/
@@ -53,7 +54,7 @@ mini-redis/
 ├── CMakeLists.txt
 ├── README.md
 └── PROJECT.md
-
+```
 
 Local build directories such as build/, build-tsan/, and build-release/ should not be committed to GitHub.
 
@@ -67,24 +68,25 @@ cmake --build build
 
 Run the main executable:
 
+```
 ./build/mini_redis
-
+```
 
 
 ## Testing
 
 The current stress test uses multiple threads accessing the same KeyValueStore.
 
-Each thread performs random:
-
+#### Each thread performs random:
+```
 SET
 GET
 DEL
 EXISTS
-
+```
 operations.
 
-Current workload:
+## Current workload:
 
 10 threads
 ×
@@ -94,6 +96,7 @@ Current workload:
 
 The stress test completed successfully.
 
+---
 ## ThreadSanitizer
 
 A separate TSan build was used to check for data races.
@@ -117,9 +120,9 @@ The current test completed without a ThreadSanitizer data-race warning.
 
 The project contains Google Benchmark tests for the cache.
 
-Early benchmark results are not considered final because Google Benchmark itself was previously built in DEBUG mode.
+>Early benchmark results are not considered final because Google Benchmark itself was previously built in DEBUG mode.
 
-Final performance benchmarking will be performed after the major Redis features are implemented.
+>Final performance benchmarking will be performed after the major Redis features are implemented.
 
 ### Planned benchmarks:
 
@@ -132,6 +135,8 @@ Concurrent Benchmark
 ## Roadmap
 
 Phase 1 — Caching (completed)
+---
+```
  KeyValueStore
  LRU Cache
  TTL
@@ -144,36 +149,47 @@ Phase 1 — Caching (completed)
  Basic thread safety
  Concurrent stress testing
  ThreadSanitizer testing
-
+```
 Phase 2 — Persistence (pending)
+---
+```
  Persistence
  Save data to disk
  Load data on startup
  TTL recovery
  Recovery/error handling
+```
 Phase 3 — Pub/Sub
+---
+```
  Channels
  SUBSCRIBE
  UNSUBSCRIBE
  PUBLISH
  Subscriber management
  Thread-safe message delivery
-
+```
 Phase 4 — Replication (pending)
+---
+```
  Primary/Replica architecture
  Command propagation
  Initial synchronization
  Replica reconnect
  Replica state management
-
+```
 Phase 5 — Networking (pending)
+---
+```
  TCP server
  Client connections
  Multiple clients
  Request handling
  Response handling
-
+```
 Phase 6 — Redis-like Protocol (pending)
+---
+```
  Command parser
  SET
  GET
@@ -185,10 +201,12 @@ Phase 6 — Redis-like Protocol (pending)
  SUBSCRIBE
  UNSUBSCRIBE
  PUBLISH
-
+```
 Eventually, the project may support RESP compatibility so existing Redis clients can communicate with Mini Redis.
 
 Phase 7 — Final Testing (pending)
+---
+```
  Unit testing
  Integration testing
  Concurrent testing
@@ -198,8 +216,10 @@ Phase 7 — Final Testing (pending)
  Replication testing
  Network testing
  Failure testing
-
+```
 Phase 8 — Performance (pending)
+---
+```
  Proper Release build
  Proper Google Benchmark Release build
  Single-thread benchmark
@@ -209,7 +229,7 @@ Phase 8 — Performance (pending)
  Optimize
  Benchmark again
  Compare before/after
-
+```
 
 ### Final Goal
 
@@ -235,13 +255,13 @@ Web Application / Backend
 
 ```
 The main purpose of this project is to learn:
-
-C++
-Data structures
-Caching
-Concurrency
-Multithreading
-Persistence
-Networking
-Distributed systems
-Performance engineering
+----
+- C++
+- Data structures
+- Caching
+- Concurrency
+- Multithreading
+- Persistence
+- Networking
+- Distributed systems
+- Performance engineering
