@@ -41,7 +41,7 @@ void worker(KeyValueStore& storage , int id){
 
 int main(){
 
-    KeyValueStore storage(100);
+    KeyValueStore storage(100 , "appendonly.aof");
 
     std::vector<std::thread> threads;
 

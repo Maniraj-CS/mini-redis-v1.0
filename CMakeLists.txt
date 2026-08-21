@@ -9,6 +9,7 @@ add_executable(mini_redis
    src/main.cpp
    src/KeyValueStore.cpp
    src/LRUCache.cpp
+   src/Persistence.cpp
 )
 
 target_include_directories(mini_redis PRIVATE
@@ -31,13 +32,23 @@ target_link_libraries(lru_benchmark
 )
 
 # for stress  testing
-
 add_executable(cache_stress_test
     tests/CacheStressTest.cpp
     src/KeyValueStore.cpp
     src/LRUCache.cpp
+    src/Persistence.cpp
 )
 
 target_include_directories(cache_stress_test PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
+
+#for Persistence testing
+add_executable(persistence_test 
+    tests/PersistenceTest.cpp
+    src/Persistence.cpp
+    src/LRUCache.cpp
+    src/KeyValueStore.cpp
+)
+
+target_include_directories(persistence_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
