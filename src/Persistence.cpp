@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <iostream>
 
 Persistence::Persistence(const std::string &filename) : filename(filename) {};
 
@@ -92,14 +91,14 @@ void Persistence::load(KeyValueStore &storage)
 											now.time_since_epoch())
 											.count();
 
-			long long remaningTTL = expiryTimestamp - currentTimestamp;
+			long long remainingTTL = expiryTimestamp - currentTimestamp;
 
-			if (remaningTTL <= 0)
+			if (remainingTTL <= 0)
 			{
 				continue;
 			}
 
-			storage.setInternal(key, value, remaningTTL);
+			storage.setInternal(key, value, remainingTTL);
 		}
 		else if (command == "DEL")
 		{

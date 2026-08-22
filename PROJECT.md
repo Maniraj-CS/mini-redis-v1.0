@@ -19,20 +19,27 @@ The final goal is to create a real server that another backend or web applicatio
 
 Target architecture:
 
-```text
-Web App / Backend
-       |
-   Redis Client
-       |
-    TCP Socket
-       |
- Mini Redis Server
-       |
- Command Parser
-       |
- KeyValueStore
-       |
-   LRUCache
+```cpp
+                         Web App / Backend
+                                  |
+                             Redis Client
+                                  |
+                              TCP Server
+                                  |
+                           Command Parser
+                                  |
+                           KeyValueStore
+                         /       |        \
+                        /        |         \
+                   LRUCache   Pub/Sub   Persistence
+                      |          |           |
+                     RAM    Subscribers  appendonly.aof
+                        \        |         /
+                         \       |        /
+                          \      |       /
+                           Replication
+                                |
+                         Replica Servers
 ```
 
 ---
@@ -144,8 +151,10 @@ clear()
 Constructor:
 
 ```cpp
-KeyValueStore(size_t capacity);
-
+KeyValueStore(
+    size_t capacity,
+    const std::string& filename
+);
 ```
 KeyValueStore delegates operations to LRUCache.
 
@@ -154,10 +163,10 @@ Concept:
 Application
      ↓
 KeyValueStore
-     ↓
-LRUCache
-     ↓
-Actual storage
+   /       \
+LRUCache  Persistence
+   |          |
+  RAM      AOF file
 ```
 ---
 ## 7. Thread Safety
@@ -321,6 +330,24 @@ ThreadSanitizer test                     DONE
 
 Initial benchmark setup                  DONE
 
+
+Persistence / AOF                        DONE
+
+
+Automatic startup recovery               DONE
+
+
+TTL recovery                             DONE
+
+
+Expired key recovery handling            DONE
+
+
+AOF error handling                       DONE
+
+
+Persistence tests                        DONE
+
 ```
 ---
 ## 13. Remaining Roadmap
@@ -343,40 +370,24 @@ Before leaving the caching layer completely:
 ---
 ## 14. Phase B — Persistence
 
-Next major feature.
 
-Goal:
+**Status: DONE**
+
+Persistence has been implemented using a simple AOF-style approach.
+
+### 14.1 Write Flow
+
+```text
+SET / DEL
+    ↓
+KeyValueStore
+    ↓
+LRUCache
+    ↓
+Persistence
+    ↓
+appendonly.aof
 ```
-RAM
- |
- +---- Data
- |
- +---- Persistence file
-```
-When the server restarts:
-```
-Server stops
-     ↓
-Data stored on disk
-     ↓
-Server starts
-     ↓
-Data loaded
-```
-Need to decide:
-
-- File format
-- Serialization
-- When to write
-- When to load
-- TTL handling
-- Expired keys after restart
-- Corrupted file handling
-
-Start with a simple implementation.
-
-#### Do NOT try to reproduce Redis RDB/AOF perfectly at first.
-
 ---
 15. Phase C — Pub/Sub
 

@@ -150,14 +150,17 @@ Phase 1 — Caching (completed)
  Concurrent stress testing
  ThreadSanitizer testing
 ```
-Phase 2 — Persistence (pending)
+Phase 2 — Persistence (completed)
 ---
 ```
- Persistence
- Save data to disk
- Load data on startup
- TTL recovery
- Recovery/error handling
+Persistence
+AOF-style append-only logging
+SET/DEL persistence
+Automatic startup recovery
+TTL recovery
+Expired-key handling
+Malformed AOF handling
+Persistence tests
 ```
 Phase 3 — Pub/Sub (pending)
 ---
@@ -236,22 +239,26 @@ Phase 8 — Performance (pending)
 The final Mini Redis should be usable by another application over the network:
 
 ``` bash
-Web Application / Backend
-          |
-      Redis Client
-          |
-      TCP Connection
-          |
-    +-------------+
-    |  Mini Redis |
-    |   Server    |
-    +-------------+
-          |
-    Command Parser
-          |
-    KeyValueStore
-          |
-      LRUCache
+                  Web   Application / Backend
+                                  |
+                             Redis Client
+                                  |
+                             TCP Server
+                                  |
+                           Command Parser
+                                  |
+                           KeyValueStore
+                         /       |        \
+                        /        |         \
+                   LRUCache   Pub/Sub   Persistence
+                      |          |           |
+                     RAM    Subscribers  appendonly.aof
+                        \        |         /
+                         \       |        /
+                          \      |       /
+                           Replication
+                                |
+                         Replica Servers
 
 ```
 The main purpose of this project is to learn:
