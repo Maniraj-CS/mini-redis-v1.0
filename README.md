@@ -15,12 +15,11 @@ Application / Backend
         |
   Command Parser
         |
-  KeyValueStore
-        |
-    LRUCache
-        |
-   Actual Storage
-
+    KeyValueStore
+   /      \
+LRUCache  Persistence
+   |          |
+  RAM      appendonly.aof
 
 ```
 ## Current Features
@@ -40,6 +39,12 @@ Application / Backend
 - Concurrent stress testing
 - ThreadSanitizer testing
 - Google Benchmark setup
+- AOF-style persistence
+- Automatic startup recovery
+- TTL-aware recovery
+- Expired-key handling
+- Malformed AOF handling
+- Persistence testing
 
 
 Project Structure
