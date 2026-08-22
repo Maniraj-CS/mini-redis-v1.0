@@ -3,95 +3,129 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 Persistence::Persistence(const std::string &filename) : filename(filename) {};
 
 void Persistence::logSet(const std::string &key, const std::string &value, int ttl)
 {
 
-    std::ofstream file(filename, std::ios::app);
-    if (!file)
-        return;
+ std::ofstream file(filename, std::ios::app);
+ if (!file)
+		return;
 
-    if (ttl <= 0)
-    {
-        file << "SET " << key << " " << value << " 0\n";
-        return;
-    }
+ if (ttl <= 0)
+ {
+		file << "SET " << key << " " << value << " 0\n";
+		return;
+ }
 
-    auto expiry = std::chrono::system_clock::now() + std::chrono::seconds(ttl);
+ auto expiry = std::chrono::system_clock::now() + std::chrono::seconds(ttl);
 
-    auto expiryTimestamp =
-        std::chrono::duration_cast<std::chrono::seconds>(
-            expiry.time_since_epoch())
-            .count();
+ auto expiryTimestamp =
+					std::chrono::duration_cast<std::chrono::seconds>(
+									expiry.time_since_epoch())
+									.count();
 
-    file << "SET " << key << " " << value << " " << expiryTimestamp << "\n";
+ file << "SET " << key << " " << value << " " << expiryTimestamp << "\n";
 }
 
 void Persistence::logDel(const std::string &key)
 {
-    std::ofstream file(filename, std::ios::app);
+ std::ofstream file(filename, std::ios::app);
 
-    file << "DEL " << key << "\n";
+ file << "DEL " << key << "\n";
 }
 
 void Persistence::load(KeyValueStore &storage)
 {
 
-    std::ifstream file(filename);
+ std::ifstream file(filename);
 
-    if (!file)
-        return;
+ if (!file)
+		return;
 
-    std::string line;
+ std::string line;
 
-    while (std::getline(file, line))
-    {
-        std::stringstream ss(line);
+ while (std::getline(file, line))
+ {
+		std::stringstream ss(line);
 
-        std::string command;
+		std::string command;
 
-        ss >> command;
+		ss >> command;
 
-        if (command == "SET")
-        {
+		if (command == "SET")
+		{
 
-            std::string key;
-            std::string value;
-            long long expiryTimestamp;
+			std::string key;
+			std::string value;
+			long long expiryTimestamp;
 
-            ss >> key >> value >> expiryTimestamp;
+			if (!(ss >> key >> value >> expiryTimestamp))
+			{
+				continue;
+			}
 
-            if (expiryTimestamp == 0)
-            {
-                storage.setInternal(key, value, 0);
-                continue;
-            }
+			/*
+			If there extra argument peresent then skip the line
+			*/
+			std::string extra;
 
-            auto now = std::chrono::system_clock::now();
-            auto currentTimestamep =
-                std::chrono::duration_cast<std::chrono::seconds>(
-                    now.time_since_epoch())
-                    .count();
+			if (ss >> extra)
+			{
+				continue;
+			}
 
-            long long remaningTTL = expiryTimestamp - currentTimestamep;
+			/*
+				If expiryTimstamp is zero its mean that there is no expiry time seted.
+			*/
+			if (expiryTimestamp == 0)
+			{
+				storage.setInternal(key, value, 0);
+				continue;
+			}
 
-            if (remaningTTL <= 0)
-            {
-                continue;
-            }
+			auto now = std::chrono::system_clock::now();
+			auto currentTimestamp =
+							std::chrono::duration_cast<std::chrono::seconds>(
+											now.time_since_epoch())
+											.count();
 
-            storage.setInternal(key, value, remaningTTL);
-        }
-        else if (command == "DEL")
-        {
+			long long remaningTTL = expiryTimestamp - currentTimestamp;
 
-            std::string key;
+			if (remaningTTL <= 0)
+			{
+				continue;
+			}
 
-            ss >> key;
+			storage.setInternal(key, value, remaningTTL);
+		}
+		else if (command == "DEL")
+		{
 
-            storage.delInternal(key);
-        }
-    }
+			std::string key;
+
+			if (!(ss >> key))
+				continue;
+
+			/*
+			If there extra argument peresent then skip the line
+			*/
+
+			std::string extra;
+
+			if (ss >> extra)
+			{
+				continue;
+			}
+
+			storage.delInternal(key);
+		}
+		else
+		{
+			// Invalid command, ignore
+			continue;
+		}
+ }
 }
