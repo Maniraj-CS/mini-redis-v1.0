@@ -9,45 +9,50 @@ Persistence::Persistence(const std::string &filename) : filename(filename) {};
 void Persistence::logSet(const std::string &key, const std::string &value, int ttl)
 {
 
- std::ofstream file(filename, std::ios::app);
- if (!file)
+	std::lock_guard<std::mutex> lock(mutex);
+
+	std::ofstream file(filename, std::ios::app);
+	if (!file)
 		return;
 
- if (ttl <= 0)
- {
+	if (ttl <= 0)
+	{
 		file << "SET " << key << " " << value << " 0\n";
 		return;
- }
+	}
 
- auto expiry = std::chrono::system_clock::now() + std::chrono::seconds(ttl);
+	auto expiry = std::chrono::system_clock::now() + std::chrono::seconds(ttl);
 
- auto expiryTimestamp =
-					std::chrono::duration_cast<std::chrono::seconds>(
-									expiry.time_since_epoch())
-									.count();
+	auto expiryTimestamp =
+		std::chrono::duration_cast<std::chrono::seconds>(
+			expiry.time_since_epoch())
+			.count();
 
- file << "SET " << key << " " << value << " " << expiryTimestamp << "\n";
+	file << "SET " << key << " " << value << " " << expiryTimestamp << "\n";
 }
 
 void Persistence::logDel(const std::string &key)
 {
- std::ofstream file(filename, std::ios::app);
 
- file << "DEL " << key << "\n";
+	std::lock_guard<std::mutex> lock(mutex);
+	
+	std::ofstream file(filename, std::ios::app);
+
+	file << "DEL " << key << "\n";
 }
 
 void Persistence::load(KeyValueStore &storage)
 {
 
- std::ifstream file(filename);
+	std::ifstream file(filename);
 
- if (!file)
+	if (!file)
 		return;
 
- std::string line;
+	std::string line;
 
- while (std::getline(file, line))
- {
+	while (std::getline(file, line))
+	{
 		std::stringstream ss(line);
 
 		std::string command;
@@ -87,9 +92,9 @@ void Persistence::load(KeyValueStore &storage)
 
 			auto now = std::chrono::system_clock::now();
 			auto currentTimestamp =
-							std::chrono::duration_cast<std::chrono::seconds>(
-											now.time_since_epoch())
-											.count();
+				std::chrono::duration_cast<std::chrono::seconds>(
+					now.time_since_epoch())
+					.count();
 
 			long long remainingTTL = expiryTimestamp - currentTimestamp;
 
@@ -121,10 +126,27 @@ void Persistence::load(KeyValueStore &storage)
 
 			storage.delInternal(key);
 		}
+		else if (command == "CLEAR")
+		{
+			storage.clearInternal();
+		}
 		else
 		{
 			// Invalid command, ignore
 			continue;
 		}
- }
+	}
+}
+
+void Persistence::logClear()
+{
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	std::ofstream file(filename, std::ios::app);
+
+	if (!file)
+		return;
+
+	file << "CLEAR\n";
 }

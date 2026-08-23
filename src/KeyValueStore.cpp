@@ -31,6 +31,7 @@ bool KeyValueStore::exists(const std::string &key)
 void KeyValueStore::clear()
 {
     cache.clear();
+    persistence.logClear();
 }
 
 void KeyValueStore::setInternal(const std::string &key, const std::string &value, int ttl)
@@ -41,4 +42,8 @@ void KeyValueStore::setInternal(const std::string &key, const std::string &value
 void KeyValueStore::delInternal(const std::string &key)
 {
     cache.del(key);
+}
+
+void KeyValueStore::clearInternal(){
+    cache.clear();
 }

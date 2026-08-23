@@ -13,7 +13,9 @@ void LRUCache::put(const std::string &key, const std::string &value, int ttl)
     {
 
         it->second->value.data = value;
-        it->second->value.expiry = std::chrono::steady_clock::now() + std::chrono::seconds(ttl);
+        it->second->value.expiry =  (ttl <= 0)
+            ? std::chrono::steady_clock::time_point::max()
+            : std::chrono::steady_clock::now() + std::chrono::seconds(ttl);
 
         lruList.splice(lruList.begin(), lruList, it->second);
     }
@@ -22,8 +24,9 @@ void LRUCache::put(const std::string &key, const std::string &value, int ttl)
         Value item;
 
         item.data = value;
-        item.expiry = std::chrono::steady_clock::now() + std::chrono::seconds(ttl);
-
+        item.expiry =  (ttl <= 0)
+            ? std::chrono::steady_clock::time_point::max()
+            : std::chrono::steady_clock::now() + std::chrono::seconds(ttl);
         Node newNode{
             key,
             item

@@ -293,6 +293,28 @@ int main()
         std::cout << "Test 13 passed: DEL extra arguments skipped\n";
     }
 
+    // ==========================================
+    // 14. CLEAR Recovery
+    // ==========================================
+
+    {
+        KeyValueStore storage(100, filename);
+
+        storage.set("name", "Maniraj", 100);
+        storage.set("age", "20", 100);
+
+        storage.clear();
+    }
+
+    {
+        KeyValueStore storage(100, filename);
+
+        assert(storage.get("name") == "");
+        assert(storage.get("age") == "");
+
+        std::cout << "Test 14 passed: CLEAR Recovery\n";
+    }
+
     // Clean test file
     std::remove(filename.c_str());
 

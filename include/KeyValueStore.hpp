@@ -35,4 +35,5 @@ public:
         int ttl);
 
     void delInternal(const std::string &key);
+    void clearInternal();
 };
