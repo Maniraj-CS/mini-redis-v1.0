@@ -38,6 +38,9 @@ void Persistence::logDel(const std::string &key)
 
 	std::ofstream file(filename, std::ios::app);
 
+	if (!file)
+		return;
+
 	file << "DEL " << key << "\n";
 }
 
