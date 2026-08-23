@@ -9,7 +9,7 @@ Persistence::Persistence(const std::string &filename) : filename(filename) {};
 void Persistence::logSet(const std::string &key, const std::string &value, int ttl)
 {
 
-	std::lock_guard<std::mutex> lock(mutex);
+	std::lock_guard<std::mutex> lock(mtx);
 
 	std::ofstream file(filename, std::ios::app);
 	if (!file)
@@ -34,8 +34,8 @@ void Persistence::logSet(const std::string &key, const std::string &value, int t
 void Persistence::logDel(const std::string &key)
 {
 
-	std::lock_guard<std::mutex> lock(mutex);
-	
+	std::lock_guard<std::mutex> lock(mtx);
+
 	std::ofstream file(filename, std::ios::app);
 
 	file << "DEL " << key << "\n";
@@ -141,7 +141,7 @@ void Persistence::load(KeyValueStore &storage)
 void Persistence::logClear()
 {
 
-	std::lock_guard<std::mutex> lock(mutex);
+	std::lock_guard<std::mutex> lock(mtx);
 
 	std::ofstream file(filename, std::ios::app);
 

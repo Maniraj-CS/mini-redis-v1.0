@@ -8,7 +8,7 @@ class KeyValueStore;
 class Persistence {
    private:
     std::string filename;
-    std::mutex mutex;
+    std::mutex mtx;
 
    public:
     Persistence(const std::string& filename);
