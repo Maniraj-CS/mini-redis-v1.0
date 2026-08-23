@@ -20,26 +20,26 @@ The final goal is to create a real server that another backend or web applicatio
 Target architecture:
 
 ```cpp
-                         Web App / Backend
-                                  |
-                             Redis Client
-                                  |
-                              TCP Server
-                                  |
-                           Command Parser
-                                  |
-                           KeyValueStore
-                         /       |        \
-                        /        |         \
-                   LRUCache   Pub/Sub   Persistence
-                      |          |           |
-                     RAM    Subscribers  appendonly.aof
-                        \        |         /
-                         \       |        /
-                          \      |       /
-                           Replication
-                                |
-                         Replica Servers
+                    Web Application / Backend
+                              |
+                         Redis Client
+                              |
+                          TCP Server
+                              |
+                       Command Parser
+                              |
+                      Mini Redis Server
+                              |
+            ┌─────────────────┼─────────────────┐
+            |                 |                 |
+        Data Layer        Messaging         Replication
+            |                 |                 |
+      KeyValueStore         Pub/Sub       Replica Servers
+       /        \
+      /          \
+ LRUCache     Persistence
+    |              |
+   RAM        appendonly.aof
 ```
 
 ---
@@ -63,23 +63,25 @@ Current technology:
 ---
 ## 3. Current Architecture
 
-Important design decision:
 
-```bash
+`KeyValueStore` acts as the higher-level API for the data layer.
+
+It manages the interaction between the `LRUCache` and the `Persistence` layer.
+
+```text
 KeyValueStore
       |
-      v
-   LRUCache
-      |
-      v
- ONE actual storage
+  ┌───┴──────────┐
+  ↓              ↓
+LRUCache     Persistence
+  |              |
+ RAM         appendonly.aof
 ```
+> Responsibilities
 
-KeyValueStore should NOT have another independent storage map.
-
-KeyValueStore acts as the higher-level API.
-
-LRUCache owns the actual cached data.
+- KeyValueStore — Provides the main data operations such as SET, GET, DEL, EXISTS, and CLEAR.
+- LRUCache — Stores the active data in memory and handles LRU eviction.
+- Persistence — Stores data-changing operations in an AOF file and recovers data when the application starts.
 
 ---
 
@@ -354,24 +356,32 @@ Persistence tests                        DONE
 
 ### Phase A — Caching Foundation Cleanup
 
-Before leaving the caching layer completely:
+**Status: DONE ✅**
 
-- Review API behavior
+The caching foundation has been implemented and tested.
+
+Completed:
+
+- KeyValueStore API
+- LRU Cache
+- GET / SET / DEL
+- EXISTS
+- CLEAR
+- TTL / Expiration
+- LRU eviction
+- Configurable capacity
+- Thread safety
+- Concurrent stress testing
+- ThreadSanitizer testing
 - Unit tests
-- Missing key tests
-- Expired key tests
-- Small capacity tests
-- Overwrite tests
-- TTL tests
-- LRU ordering tests
-- Delete tests
-- Clear tests
+
+Caching foundation is complete and serves as the in-memory data layer for the project.
 
 ---
 ## 14. Phase B — Persistence
 
 
-**Status: DONE**
+**Status: DONE ✅**
 
 Persistence has been implemented using a simple AOF-style approach.
 
@@ -389,7 +399,9 @@ Persistence
 appendonly.aof
 ```
 ---
-15. Phase C — Pub/Sub
+## 15. Phase C — Pub/Sub
+
+**Status: Working...**
 
 Implement:
 ```
@@ -708,8 +720,6 @@ Do NOT spend more time on final performance benchmarking yet.
 
 The recommended order is:
 ```
-Persistence
-    ↓
 Pub/Sub
     ↓
 Replication
@@ -732,8 +742,6 @@ Optimization
 ```
 ---
 ## 24. Future Session Handoff
-
-When continuing this project in a new conversation:
 
 Read this PROJECT.md.
 ```

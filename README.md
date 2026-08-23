@@ -52,6 +52,7 @@ Project Structure
 ```bash
 mini-redis/
 ├── benchmarks/
+├── blog/
 ├── docs/
 ├── include/
 ├── src/
@@ -244,26 +245,26 @@ Phase 8 — Performance (pending)
 The final Mini Redis should be usable by another application over the network:
 
 ``` bash
-                  Web   Application / Backend
-                                  |
-                             Redis Client
-                                  |
-                             TCP Server
-                                  |
-                           Command Parser
-                                  |
-                           KeyValueStore
-                         /       |        \
-                        /        |         \
-                   LRUCache   Pub/Sub   Persistence
-                      |          |           |
-                     RAM    Subscribers  appendonly.aof
-                        \        |         /
-                         \       |        /
-                          \      |       /
-                           Replication
-                                |
-                         Replica Servers
+                     Web Application / Backend
+                              |
+                         Redis Client
+                              |
+                          TCP Server
+                              |
+                       Command Parser
+                              |
+                      Mini Redis Server
+                              |
+            ┌─────────────────┼─────────────────┐
+            |                 |                 |
+        Data Layer        Messaging         Replication
+            |                 |                 |
+      KeyValueStore         Pub/Sub       Replica Servers
+       /        \
+      /          \
+ LRUCache     Persistence
+    |              |
+   RAM        appendonly.aof
 
 ```
 The main purpose of this project is to learn:
