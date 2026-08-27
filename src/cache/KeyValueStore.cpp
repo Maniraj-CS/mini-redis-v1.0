@@ -1,4 +1,4 @@
-#include "KeyValueStore.hpp"
+#include "cache/KeyValueStore.hpp"
 
 KeyValueStore::KeyValueStore(size_t capacity, const std::string &filename)
     : cache(capacity), persistence(filename)

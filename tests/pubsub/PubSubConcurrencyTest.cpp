@@ -1,4 +1,4 @@
-#include "../include/PubSub.hpp"
+#include "pubsub/PubSub.hpp"
 
 #include <cassert>
 #include <iostream>

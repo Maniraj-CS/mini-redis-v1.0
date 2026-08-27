@@ -1,5 +1,5 @@
 
-#include "MessageQueue.hpp"
+#include "pubsub/MessageQueue.hpp"
 
 void MessageQueue::push(const std::string &message)
 {

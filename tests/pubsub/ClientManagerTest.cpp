@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "ClientManager.hpp"
+#include "pubsub/ClientManager.hpp"
 
 int main()
 {

@@ -1,4 +1,4 @@
-#include "LRUCache.hpp"
+#include "cache/LRUCache.hpp"
 
 // constructor
 LRUCache::LRUCache(size_t capacity) : capacity(capacity) {}

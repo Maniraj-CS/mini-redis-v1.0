@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "MessageQueue.hpp"
+#include "pubsub/MessageQueue.hpp"
 
 int main()
 {

@@ -2,8 +2,8 @@
 #include <cassert>
 #include <iostream>
 
-#include "ClientManager.hpp"
-#include "PubSub.hpp"
+#include "pubsub/ClientManager.hpp"
+#include "pubsub/PubSub.hpp"
 
 int main()
 {

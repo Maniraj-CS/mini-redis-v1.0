@@ -4,7 +4,7 @@
 #include <thread>
 #include <vector>
 
-#include "ClientManager.hpp"
+#include "pubsub/ClientManager.hpp"
 
 int main()
 {

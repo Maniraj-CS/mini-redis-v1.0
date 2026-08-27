@@ -1,5 +1,5 @@
 
-#include "PubSub.hpp"
+#include "pubsub/PubSub.hpp"
 
 #include <iostream>
 #include <cassert>
