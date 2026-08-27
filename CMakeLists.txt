@@ -52,3 +52,73 @@ add_executable(persistence_test
 )
 
 target_include_directories(persistence_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# # for PubSub testing
+
+# add_executable(pubsub_test
+#     tests/PubSubTest.cpp
+#     src/PubSub.cpp
+# )
+
+# target_include_directories(pubsub_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# # for PubSubConcurrency testing
+
+# add_executable(concurrency_pubsub_test
+#     tests/PubSubConcurrencyTest.cpp
+#     src/PubSub.cpp
+# )
+
+# target_include_directories(concurrency_pubsub_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# # for MessageQueue testiong
+
+# add_executable(message_queue 
+#     src/MessageQueue.cpp
+#     tests/MessageQueueTest.cpp
+# )
+
+# target_include_directories(message_queue PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+# # for MessageQueue Concurrency testiong
+
+# add_executable(curr_message_queue 
+#     src/MessageQueue.cpp
+#     tests/MessageQueueConcurrencyTest.cpp
+# )
+
+# target_include_directories(curr_message_queue PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# # for ClientManager testiong
+
+# add_executable(client_manager_test
+#     src/ClientManager.cpp
+#     src/MessageQueue.cpp
+#     tests/ClientManagerTest.cpp
+# )
+
+# target_include_directories(client_manager_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+# # for ClientManager Concurrency testiong
+
+# add_executable(client_manager_concurrency_test
+#     src/ClientManager.cpp
+#     src/MessageQueue.cpp
+#     tests/ClientManagerConcurrencyTest.cpp
+# )
+
+# target_include_directories(client_manager_concurrency_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+# for PubSub Integration testiong
+
+add_executable(pubsub_integration_test
+    tests/PubSubIntegrationTest.cpp
+    src/PubSub.cpp
+    src/ClientManager.cpp
+    src/MessageQueue.cpp
+)
+
+target_include_directories(pubsub_integration_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
