@@ -6,21 +6,25 @@ The goal of this project is to understand how Redis-like systems work internally
 
 ## Current Architecture
 
-```text
-Application / Backend
-        |
-    Redis Client
-        |
-     TCP Server
-        |
-  Command Parser
-        |
-    KeyValueStore
-   /      \
-LRUCache  Persistence
-   |          |
-  RAM      appendonly.aof
-
+```
+                    Mini Redis
+                        |
+          +-------------+-------------+
+          |                           |
+          v                           v
+    KeyValueStore                   PubSub
+          |                           |
+          v                           v
+      LRUCache                  ClientManager
+          |                           |
+          v                    +------+------+
+         RAM                   |      |      |
+          |                    v      v      v
+          v                  Queue  Queue  Queue
+     Persistence               1      2      3
+          |                    |      |      |
+          v                    v      v      v
+   appendonly.aof           Client  Client  Client
 ```
 ## Current Features
 
