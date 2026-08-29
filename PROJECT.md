@@ -350,6 +350,20 @@ AOF error handling                       DONE
 
 Persistence tests                        DONE
 
+Pub/Sub core (PubSub, ClientManager,
+MessageQueue)                            DONE
+
+
+SUBSCRIBE / UNSUBSCRIBE / PUBLISH        DONE
+
+
+Thread-safe channel + queue ops          DONE
+
+
+Pub/Sub integration test                 DONE
+
+
+Pub/Sub edge-case / stress test          DONE
 ```
 ---
 ## 13. Remaining Roadmap
@@ -401,7 +415,7 @@ appendonly.aof
 ---
 ## 15. Phase C — Pub/Sub
 
-**Status: Working...**
+**Status: DONE ✅ (core module) — not yet wired into a network layer**
 
 Implement:
 ```
@@ -409,25 +423,46 @@ SUBSCRIBE
 UNSUBSCRIBE
 PUBLISH
 ```
-Basic architecture:
+Architecture (as built):
 ```
 Publisher
     |
- Channel
+ PubSub                 channel -> unordered_set<clientId>
     |
- Subscribers
+ ClientManager           clientId -> shared_ptr<MessageQueue>
+    |
+ MessageQueue            thread-safe queue<string> per client
 ```
-Need:
-```
-Channel management
-Subscriber management
-Message delivery
-Thread safety
-Client lifecycle
-```
-Important:
 
-#### Pub/Sub will eventually interact with the network layer.
+Components:
+
+- `MessageQueue` (`include/pubsub/MessageQueue.hpp`, `src/pubsub/MessageQueue.cpp`) — thread-safe FIFO for one client. `push()`, `pop()` (returns `std::optional<string>`), `empty()`, `size()`, each protected by its own mutex.
+- `ClientManager` (`include/pubsub/ClientManager.hpp`, `src/pubsub/ClientManager.cpp`) — owns `unordered_map<int, shared_ptr<MessageQueue>>`. `addClient()`, `removeClient()`, `getQueue()`, all mutex-protected.
+- `PubSub` (`include/pubsub/PubSub.hpp`, `src/pubsub/PubSub.cpp`) — owns `unordered_map<string, unordered_set<int>> channels` plus a reference to `ClientManager`. `subscribe()`/`unsubscribe()` mutate the channel's subscriber set under a mutex. `publish()` copies the subscriber set under lock, releases the lock, then pushes into each subscriber's `MessageQueue` — so channel-map contention doesn't hold up message delivery.
+
+Testing done (wired into CMake, passing):
+```
+tests/pubsub/PubSubIntegrationTest.cpp
+tests/pubsub/PubSubEdgeCaseTest.cpp   (100 clients / 10 threads, concurrent subscribe/unsubscribe/publish)
+```
+
+Written but currently commented out of CMakeLists.txt — should be re-enabled:
+```
+tests/pubsub/PubSubTest.cpp
+tests/pubsub/PubSubConcurrencyTest.cpp
+tests/pubsub/MessageQueueTest.cpp
+tests/pubsub/MessageQueueConcurrencyTest.cpp
+tests/pubsub/ClientManagerTest.cpp
+tests/pubsub/ClientManagerConcurrencyTest.cpp
+```
+
+Known gaps / next steps for this module:
+```
+Not yet run under ThreadSanitizer (only the cache stress test has been TSan-tested so far)
+Not yet integrated into src/main.cpp — no live demo/driver exists yet
+No network layer yet, so clientId is just an int today, not a real remote client
+SUBSCRIBE / UNSUBSCRIBE / PUBLISH are not yet reachable from a command parser (Phase F)
+```
 
 ---
 ## 16. Phase D — Replication
@@ -718,10 +753,11 @@ Then optimize.
 
 Do NOT spend more time on final performance benchmarking yet.
 
-The recommended order is:
+Pub/Sub (core module) is now DONE — see section 15.
+Remaining items for Pub/Sub itself: enable the commented-out unit/concurrency tests in CMakeLists.txt, run the concurrency test under ThreadSanitizer, and wire PubSub into main.cpp / the future TCP server.
+
+The recommended order for what's left is:
 ```
-Pub/Sub
-    ↓
 Replication
     ↓
 TCP Server
@@ -777,14 +813,18 @@ DONE
 
 
 ThreadSanitizer:
+DONE (cache only — Pub/Sub concurrency test still needs to be run under TSan)
+
+
+Persistence:
 DONE
+
+Pub/Sub (core module):
+DONE — not yet wired into main.cpp or a network layer
 
 
 Major features remaining:
 
-
-Persistence
-Pub/Sub
 Replication
 TCP Server
 Command Protocol

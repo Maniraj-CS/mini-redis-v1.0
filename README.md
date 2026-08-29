@@ -45,6 +45,14 @@ LRUCache  Persistence
 - Expired-key handling
 - Malformed AOF handling
 - Persistence testing
+- Pub/Sub (channel-based messaging)
+- SUBSCRIBE / UNSUBSCRIBE
+- PUBLISH
+- Per-client message queue (`MessageQueue`)
+- Client lifecycle management (`ClientManager`)
+- Thread-safe channel subscribe/unsubscribe/publish
+- Pub/Sub integration testing
+- Pub/Sub edge-case & concurrency stress testing
 
 
 Project Structure
@@ -128,6 +136,46 @@ cmake --build build-tsan
 ```
 
 The current test completed without a ThreadSanitizer data-race warning.
+
+
+> Note: TSan has only been run against the cache stress test so far. The Pub/Sub concurrency test should also be run under TSan before Pub/Sub is considered fully verified.
+
+## Pub/Sub
+
+Mini Redis now supports basic channel-based messaging, made up of three components:
+
+- **`MessageQueue`** — a thread-safe FIFO queue of pending messages for a single client.
+- **`ClientManager`** — creates/removes clients and hands out each client's `MessageQueue`.
+- **`PubSub`** — maps channel names to a set of subscribed client IDs, and delivers published messages to every subscriber's queue.
+
+```
+Publisher
+    |
+ PubSub (channel -> subscriber IDs)
+    |
+ ClientManager (clientId -> MessageQueue)
+    |
+ Subscriber's MessageQueue
+```
+
+Supported operations:
+
+```
+subscribe(channel, clientId)
+unsubscribe(channel, clientId)
+publish(channel, message)
+```
+
+All three classes use `std::mutex` internally, so subscribe/unsubscribe/publish are safe to call concurrently from multiple threads.
+
+Run the Pub/Sub tests:
+
+```bash
+./build/pubsub_integration_test
+./build/pubsub_edge_case_test
+```
+
+Pub/Sub is currently a standalone, in-process module — it is not yet wired into `main.cpp` or a network layer. That wiring happens in the Networking and Command Protocol phases below.
 
 ## Benchmark
 
