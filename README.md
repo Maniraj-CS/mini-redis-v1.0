@@ -51,15 +51,22 @@ Project Structure
 ---
 ```bash
 mini-redis/
-├── benchmarks/
-├── blog/
-├── docs/
 ├── include/
+│   ├── cache/ 
+│   └── pubsub/
+│
 ├── src/
+│   ├── cache/
+│   └── pubsub/
+│
 ├── tests/
+│   ├── cache/
+│   ├── persistence/
+│   └── pubsub/
+│
+├── benchmarks/
 ├── CMakeLists.txt
-├── README.md
-└── PROJECT.md
+└── README.md
 ```
 
 Local build directories such as build/, build-tsan/, and build-release/ should not be committed to GitHub.
@@ -168,7 +175,7 @@ Expired-key handling
 Malformed AOF handling
 Persistence tests
 ```
-Phase 3 — Pub/Sub (pending)
+Phase 3 — Pub/Sub (completed)
 ---
 ```
  Channels
