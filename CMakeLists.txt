@@ -112,7 +112,7 @@ target_include_directories(persistence_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 # target_include_directories(client_manager_concurrency_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 
-# for PubSub Integration testiong
+# for PubSub Integration testing
 
 add_executable(pubsub_integration_test
     tests/pubsub/PubSubIntegrationTest.cpp
@@ -122,3 +122,15 @@ add_executable(pubsub_integration_test
 )
 
 target_include_directories(pubsub_integration_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+
+# for PubSubEdgeCase testing
+
+add_executable(pubsub_edge_case_test
+    tests/pubsub/PubSubEdgeCaseTest.cpp
+    src/pubsub/PubSub.cpp
+    src/pubsub/ClientManager.cpp
+    src/pubsub/MessageQueue.cpp
+)
+
+target_include_directories(pubsub_edge_case_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
