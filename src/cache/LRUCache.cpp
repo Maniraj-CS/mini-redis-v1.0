@@ -1,11 +1,12 @@
-#include "LRUCache.hpp"
+#include "cache/LRUCache.hpp"
 
+// constructor
 LRUCache::LRUCache(size_t capacity) : capacity(capacity) {}
 
 void LRUCache::put(const std::string &key, const std::string &value, int ttl)
 {   
 
-    std::lock_guard<std::mutex> lock(mtx);
+    std::lock_guard<std::mutex> lock(mtx); //Allow only one thread
 
     auto it = cache.find(key);
 

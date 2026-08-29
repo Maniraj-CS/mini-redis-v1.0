@@ -5,7 +5,7 @@
 #include <thread>
 #include <chrono>
 
-#include "KeyValueStore.hpp"
+#include "cache/KeyValueStore.hpp"
 
 int main()
 {

@@ -1,5 +1,5 @@
 #include <benchmark/benchmark.h>
-#include "LRUCache.hpp"
+#include "cache/LRUCache.hpp"
 
 static void BM_Get(benchmark::State& state)
 {

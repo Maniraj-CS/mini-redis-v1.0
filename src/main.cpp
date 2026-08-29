@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include "KeyValueStore.hpp"
+#include "cache/KeyValueStore.hpp"
 
 void worker(KeyValueStore& storage, int id)
 {
